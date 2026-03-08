@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { LayoutDashboard, ListTodo, BarChart3, Settings, Coins, LogOut } from "lucide-react";
+import { useTheme } from "next-themes";
+import { LayoutDashboard, ListTodo, BarChart3, Settings, Coins, LogOut, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -13,10 +14,10 @@ const navItems = [
 
 const Layout = () => {
   const { signOut } = useAuth();
+  const { theme, setTheme } = useTheme();
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Sidebar - desktop */}
       <aside className="hidden md:flex md:w-64 flex-col border-r border-border bg-card p-4">
         <div className="flex items-center gap-2 px-2 mb-8">
           <Coins className="h-7 w-7 text-primary" />
@@ -42,21 +43,35 @@ const Layout = () => {
             </NavLink>
           ))}
         </nav>
-        <Button variant="ghost" className="justify-start gap-3 text-muted-foreground" onClick={signOut}>
-          <LogOut className="h-4 w-4" />
-          Sign Out
-        </Button>
+        <div className="flex flex-col gap-1">
+          <Button
+            variant="ghost"
+            className="justify-start gap-3 text-muted-foreground"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            {theme === "dark" ? "Light Mode" : "Dark Mode"}
+          </Button>
+          <Button variant="ghost" className="justify-start gap-3 text-muted-foreground" onClick={signOut}>
+            <LogOut className="h-4 w-4" />
+            Sign Out
+          </Button>
+        </div>
       </aside>
 
-      {/* Main content */}
       <div className="flex flex-1 flex-col">
-        {/* Mobile nav */}
         <nav className="flex md:hidden items-center justify-between border-b border-border bg-card px-4 py-3">
           <div className="flex items-center gap-2">
             <Coins className="h-5 w-5 text-primary" />
             <span className="font-display text-lg font-bold">TaskScore</span>
           </div>
           <div className="flex gap-1">
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="p-2 rounded-md text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
             {navItems.map(({ to, icon: Icon }) => (
               <NavLink
                 key={to}
